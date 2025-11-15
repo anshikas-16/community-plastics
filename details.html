@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Methodology & Recommendations — Excessive plastics</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{--accent:#0b5cff}
+    body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;background:#f6f8fb}
+    .card-compact{border-radius:12px;box-shadow:0 6px 20px rgba(18,38,63,0.06)}
+    .photo{border-radius:8px;box-shadow:0 6px 18px rgba(18,38,63,0.06); width:100%; height:160px; object-fit:cover}
+    .hint{font-size:.875rem; color:#6b7280}
+    .no-print{display:block}
+    @media print { .no-print{display:none} }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-white border-bottom no-print">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">Excessive Plastics — SDG12</a>
+    <div class="ms-auto d-none d-md-block">
+      <a class="btn btn-outline-primary me-2" href="index.html">Overview</a>
+      <a class="btn btn-outline-primary me-2" href="responses.html">Responses</a>
+      <a class="btn btn-outline-primary" href="charts.html">Charts</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container my-4">
+  <div class="row g-3">
+    <div class="col-lg-7">
+      <div class="card card-compact p-3 mb-3">
+        <h5>Methodology</h5>
+        <ol>
+          <li><strong>Questionnaire design:</strong> Questions captured frequency of plastic use, types of plastic items, awareness of alternatives, willingness to change, and short feedback comments.</li>
+          <li><strong>Data collection:</strong> Google Forms filled by shoppers and vendors at local weekly markets (convenience sampling).</li>
+          <li><strong>Sample:</strong> 41 responses. (Add date range if you want to show collection dates.)</li>
+          <li><strong>Data processing:</strong> Export CSV → standardize response labels (e.g., \"Often\", \"Sometimes\", \"Rarely\") → remove internal score columns for public view.</li>
+        </ol>
+      </div>
+
+      <div class="card card-compact p-3 mb-3">
+        <h5>Recommendations</h5>
+        <ul>
+          <li><strong>Reusable-bag incentives:</strong> Offer discounts or loyalty points for shoppers who bring their own bags.</li>
+          <li><strong>Market-level segregation:</strong> Place labelled bins for plastic and non-plastic waste near vendor rows and map collection points.</li>
+          <li><strong>Awareness campaigns:</strong> Run demo stalls, signage, and short talks on market days that show reusable options and reuse/refill schemes.</li>
+          <li><strong>Pilot exchange program:</strong> Collect clean plastics at a stall in exchange for small discounts at participating vendors.</li>
+        </ul>
+      </div>
+
+      <div class="card card-compact p-3 mb-3">
+        <h5>How to cite this survey</h5>
+        <p class="mb-0 hint">Community Connect — "Excessive use of plastics in weekly markets", survey of local market visitors and vendors (41 responses). For more details contact the project leads.</p>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card card-compact p-3 mb-3">
+        <h6 class="mb-2">Photos — Awareness gallery</h6>
+        <p class="hint mb-2">Replace these images by hosting your own files in <code>assets/</code> or updating the <code>src</code> URLs.</p>
+        <div class="row g-2">
+          <div class="col-6">
+            <img class="photo" src="assets/photo1.jpg" alt="Awareness photo 1">
+          </div>
+          <div class="col-6">
+            <img class="photo" src="assets/photo2.jpg" alt="Awareness photo 2">
+          </div>
+          <div class="col-6">
+            <img class="photo" src="assets/photo3.jpg" alt="Awareness photo 3">
+          </div>
+          <div class="col-6">
+            <img class="photo" src="assets/photo4.jpg" alt="Awareness photo 4">
+          </div>
+        </div>
+      <div class="card card-compact p-3 mb-3">
+        <h6>Quick actions</h6>
+        <div class="d-grid gap-2">
+          <a class="btn btn-outline-primary" href="responses.html">Open Responses</a>
+          <a class="btn btn-outline-secondary" href="charts.html">Open Charts</a>
+          <button id="downloadAssets" class="btn btn-outline-success">Download sample assets (zip)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback -->
+  <section class="card card-compact p-3 mt-3">
+    <h5>Feedback</h5>
+    <p class="hint">By default this opens your email client. If you want stored feedback (Formspree/Netlify), I can add it — tell me which.</p>
+
+    <form id="fbForm">
+      <div class="row g-2">
+        <div class="col-md-4"><input id="fbName" class="form-control" placeholder="Your name"></div>
+        <div class="col-md-4"><input id="fbEmail" class="form-control" placeholder="Email (optional)"></div>
+        <div class="col-md-4"><input id="fbTopic" class="form-control" placeholder="Topic (optional)"></div>
+      </div>
+      <div class="mt-2"><textarea id="fbMsg" class="form-control" rows="4" placeholder="Your feedback"></textarea></div>
+      <div class="mt-2 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">Send feedback (email)</button>
+        <button class="btn btn-outline-secondary" id="fbCopy" type="button">Copy to clipboard</button>
+      </div>
+      <div class="mt-2 hint">Tip: replace <code>anshikasrivastava16755@gmail.com</code> in the HTML with the address where you want to receive feedback.</div>
+    </form>
+  </section>
+
+  <footer class="text-muted small mt-4">Prepared for: Community Connect — Final Evaluation</footer>
+</main>
+
+<!-- optional ZIP download (demo) -->
+<a id="zipLink" href="#" style="display:none">download</a>
+
+<script>
+  // Download demo assets (we'll create a small in-memory ZIP-like replacement)
+  document.getElementById('downloadAssets').addEventListener('click', ()=> {
+    alert('I can prepare a ZIP of your images and site files if you want — I will bundle it for GitHub. Tell me and I will create it.');
+  });
+
+  // Feedback form behavior (mailto fallback)
+  document.getElementById('fbForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('fbName').value || 'Anonymous';
+    const email = document.getElementById('fbEmail').value || '';
+    const topic = document.getElementById('fbTopic').value || 'Feedback';
+    const msg = document.getElementById('fbMsg').value || '';
+    const subject = encodeURIComponent(topic + ' — Excessive plastics survey');
+    const body = encodeURIComponent(`Name: ${name}%0AEmail: ${email}%0A%0A${msg}`);
+    // opens user's default mail client
+    window.open(`mailto:youremail@example.com?subject=${subject}&body=${body}`);
+    alert('Email compose window opened. Replace youremail@example.com in the file with your real email to receive feedback directly.');
+  });
+
+  // Copy to clipboard
+  document.getElementById('fbCopy').addEventListener('click', ()=>{
+    const txt = `Feedback from site:\nName: ${document.getElementById('fbName').value}\nEmail: ${document.getElementById('fbEmail').value}\nTopic: ${document.getElementById('fbTopic').value}\n\n${document.getElementById('fbMsg').value}`;
+    navigator.clipboard.writeText(txt).then(()=> alert('Copied feedback to clipboard'));
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

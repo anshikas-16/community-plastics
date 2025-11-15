@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Charts — Excessive use of plastics (Images)</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{--accent:#0b5cff}
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; background:#f6f8fb}
+    .card-compact{border-radius:12px; box-shadow:0 6px 20px rgba(18,38,63,0.06)}
+    .chart-img{width:100%; height:320px; object-fit:contain; background:#fff; border-radius:8px; border:1px solid #eee}
+    .chart-card{padding:12px}
+    .small-muted{color:#6b7280; font-size:.9rem}
+    .no-data{opacity:.7; font-style:italic}
+    .download-row{display:flex; gap:8px; align-items:center}
+    @media (max-width:767px){
+      .chart-img{height:240px}
+    }
+
+    /* Print: one chart per page */
+    @media print {
+      nav, .no-print, .btn { display: none !important; }
+      .chart-wrapper { page-break-inside: avoid; page-break-after: always; }
+      body { background: white; color: black; }
+      .chart-img { height: 420px !important; object-fit:contain; border:none; }
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-white border-bottom no-print">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">Excessive Plastics — SDG12</a>
+    <div class="ms-auto d-none d-md-block">
+      <a class="btn btn-outline-primary me-2" href="index.html">Overview</a>
+      <a class="btn btn-outline-primary me-2" href="responses.html">Responses</a>
+      <a class="btn btn-outline-primary" href="details.html">Methodology</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container my-4">
+  <div class="card card-compact p-3 mb-3">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <h5 class="mb-0">Charts — (pre-rendered images)</h5>
+      <div class="d-flex gap-2">
+        <button id="downloadAll" class="btn btn-sm btn-success">Download all charts</button>
+        <button id="printBtn" class="btn btn-sm btn-outline-secondary">Print / Save PDF</button>
+      </div>
+    </div>
+
+    <p class="small text-muted">Below are your 7 chart images (chart1 → chart7). Use the per-chart download button to save a single PNG, or click "Download all charts" to download them one-by-one.</p>
+
+    <div id="gallery" class="row g-3">
+      <!-- Chart 1 -->
+      <div class="col-sm-6 col-lg-4 chart-wrapper">
+        <div class="card chart-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <strong>Chart 1</strong>
+            <span class="small-muted">Figure 1</span>
+          </div>
+          <img class="chart-img" id="img1" src="assets/chart1.png" alt="Chart 1">
+          <div class="mt-2 download-row">
+            <button class="btn btn-sm btn-outline-primary" data-target="img1">Download PNG</button>
+            <small class="small-muted ms-auto">Responses: <span id="count1">n</span></small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 2 -->
+      <div class="col-sm-6 col-lg-4 chart-wrapper">
+        <div class="card chart-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <strong>Chart 2</strong>
+            <span class="small-muted">Figure 2</span>
+          </div>
+          <img class="chart-img" id="img2" src="assets/chart2.png" alt="Chart 2">
+          <div class="mt-2 download-row">
+            <button class="btn btn-sm btn-outline-primary" data-target="img2">Download PNG</button>
+            <small class="small-muted ms-auto">Responses: <span id="count2">n</span></small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 3 -->
+      <div class="col-sm-6 col-lg-4 chart-wrapper">
+        <div class="card chart-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <strong>Chart 3</strong>
+            <span class="small-muted">Figure 3</span>
+          </div>
+          <img class="chart-img" id="img3" src="assets/chart3.png" alt="Chart 3">
+          <div class="mt-2 download-row">
+            <button class="btn btn-sm btn-outline-primary" data-target="img3">Download PNG</button>
+            <small class="small-muted ms-auto">Responses: <span id="count3">n</span></small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 4 -->
+      <div class="col-sm-6 col-lg-4 chart-wrapper">
+        <div class="card chart-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <strong>Chart 4</strong>
+            <span class="small-muted">Figure 4</span>
+          </div>
+          <img class="chart-img" id="img4" src="assets/chart4.png" alt="Chart 4">
+          <div class="mt-2 download-row">
+            <button class="btn btn-sm btn-outline-primary" data-target="img4">Download PNG</button>
+            <small class="small-muted ms-auto">Responses: <span id="count4">n</span></small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 5 -->
+      <div class="col-sm-6 col-lg-4 chart-wrapper">
+        <div class="card chart-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <strong>Chart 5</strong>
+            <span class="small-muted">Figure 5</span>
+          </div>
+          <img class="chart-img" id="img5" src="assets/chart5.png" alt="Chart 5">
+          <div class="mt-2 download-row">
+            <button class="btn btn-sm btn-outline-primary" data-target="img5">Download PNG</button>
+            <small class="small-muted ms-auto">Responses: <span id="count5">n</span></small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 6 -->
+      <div class="col-sm-6 col-lg-4 chart-wrapper">
+        <div class="card chart-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <strong>Chart 6</strong>
+            <span class="small-muted">Figure 6</span>
+          </div>
+          <img class="chart-img" id="img6" src="assets/chart6.png" alt="Chart 6">
+          <div class="mt-2 download-row">
+            <button class="btn btn-sm btn-outline-primary" data-target="img6">Download PNG</button>
+            <small class="small-muted ms-auto">Responses: <span id="count6">n</span></small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 7 -->
+      <div class="col-sm-6 col-lg-4 chart-wrapper">
+        <div class="card chart-card">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <strong>Chart 7</strong>
+            <span class="small-muted">Figure 7</span>
+          </div>
+          <img class="chart-img" id="img7" src="assets/chart7.png" alt="Chart 7">
+          <div class="mt-2 download-row">
+            <button class="btn btn-sm btn-outline-primary" data-target="img7">Download PNG</button>
+            <small class="small-muted ms-auto">Responses: <span id="count7">n</span></small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+  // Per-chart download handler
+  document.querySelectorAll('button[data-target]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-target');
+      const img = document.getElementById(id);
+      if(!img || !img.src){ alert('Image not found'); return; }
+      // create an anchor and download
+      const a = document.createElement('a');
+      a.href = img.src;
+      // suggest filename
+      const filename = (id + '.png').replace('img','chart');
+      a.download = filename;
+      // for cross-origin images this may trigger CORS; works fine if assets are local files
+      a.click();
+    });
+  });
+
+  // Download all charts sequentially (simple)
+  document.getElementById('downloadAll').addEventListener('click', () => {
+    const ids = ['img1','img2','img3','img4','img5','img6','img7'];
+    // sequentially trigger downloads with small delay
+    ids.forEach((id, i) => {
+      setTimeout(() => {
+        const img = document.getElementById(id);
+        if(!img) return;
+        const a = document.createElement('a');
+        a.href = img.src;
+        a.download = id + '.png';
+        a.click();
+      }, i * 220);
+    });
+  });
+
+  // Print button
+  document.getElementById('printBtn').addEventListener('click', ()=> window.print());
+
+  // (Optional) If you want to show counts (n) per chart, you can set them here.
+  // For now we show '41' for each since your survey has 41 responses.
+  const totalResponses = 41;
+  for(let i=1;i<=7;i++){
+    const el = document.getElementById('count' + i);
+    if(el) el.textContent = totalResponses;
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

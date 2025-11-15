@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Excessive use of plastics in weekly markets — SDG12</title>
+
+  <!-- Bootstrap (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{--accent:#0b5cff;--muted:#6b7280}
+    body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; background:#f6f8fb}
+    .hero{padding:3rem 1rem;background:linear-gradient(90deg,rgba(11,92,255,0.06),rgba(11,92,255,0.02))}
+    .card-compact{border-radius:12px;box-shadow:0 6px 20px rgba(18,38,63,0.06)}
+    .sdg-badge{background:#2da24d;color:#fff;padding:6px 10px;border-radius:6px;font-weight:600}
+    nav .btn-link { text-decoration: none; color: var(--accent); }
+    @media print { nav, .no-print { display:none } }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-white border-bottom no-print">
+  <div class="container">
+    <a class="navbar-brand" href="#">Excessive Plastics — SDG12</a>
+    <div class="ms-auto d-none d-md-block">
+      <!-- these link targets assume you'll create the other pages next -->
+      <a class="btn btn-outline-primary me-2" href="responses.html">Responses (41)</a>
+      <a class="btn btn-outline-primary me-2" href="details.html">Methodology & Photos</a>
+      <a class="btn btn-outline-primary" href="charts.html">Charts</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <h1 class="display-6">Excessive use of plastics in weekly markets</h1>
+        <p class="lead">A community survey investigating single-use plastics in weekly markets — aligned with <span class="sdg-badge">SDG 12 — Responsible Consumption & Production</span>.</p>
+
+        <p><strong>Purpose:</strong> Present evidence from the survey, raise awareness, and recommend actionable steps for market stakeholders.</p>
+
+        <div class="mt-3">
+          <a class="btn btn-primary me-2" href="responses.html">View Responses</a>
+          <a class="btn btn-outline-primary me-2" href="charts.html">View Charts</a>
+          <a class="btn btn-outline-secondary" href="details.html">Methodology & Photos</a>
+        </div>
+      </div>
+
+      <div class="col-lg-5 text-end d-none d-lg-block">
+        <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?q=80&w=800&auto=format&fit=crop" alt="market" width="320" style="border-radius:12px;box-shadow:0 10px 30px rgba(18,38,63,0.08)">
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <div class="card card-compact p-3">
+        <strong>Quick summary</strong>
+        <p class="mb-0">41 respondents. Key issues identified: frequent use of single-use bags and packaging; low awareness of alternatives; inconsistent waste disposal at market locations. Recommended actions include reusable-bag incentives, awareness stalls, and pilot plastic collection points.</p>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<main class="container my-5">
+  <section class="row g-3">
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6>Scope</h6>
+        <p class="mb-0">The scope of this study focuses on understanding and analyzing the extent of plastic consumption in weekly markets and evaluating its alignment with UN Sustainable Development Goal 12: Responsible Consumption and Production. This includes examining consumer behaviour, vendor practices, levels of awareness, and the availability and acceptance of sustainable alternatives to single-use plastics.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6>Sample size</h6>
+        <p class="mb-0">41 responses taken in Google Form. Also, Plastic reducing awareness was also created among the local street vendors and shop owners.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6>Deliverables</h6>
+        <ul class="mb-0">
+          <li>Responses page (raw table + search)</li>
+          <li>Methodology & recommendations + photos</li>
+          <li>Pie charts for each question</li>
+          <li>Feedback capture (mail or third-party form)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-muted small mt-4">
+    <div>Prepared for: Community Connect — Final Evaluation • Generated: <span id="genDate"></span></div>
+  </footer>
+</main>
+
+<script>
+  // small helper to display local preview time
+  document.getElementById('genDate').textContent = new Date().toLocaleString();
+</script>
+
+<!-- Bootstrap scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

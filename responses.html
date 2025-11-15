@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Responses — Excessive use of plastics (41)</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{--accent:#0b5cff}
+    body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;background:#f6f8fb}
+    .card-compact{border-radius:12px;box-shadow:0 6px 20px rgba(18,38,63,0.06)}
+    .no-data{opacity:.7;font-style:italic}
+    table td, table th { vertical-align: middle; }
+    .storage-badge { font-size: .85rem; color: #065f46; background: #ecfdf5; padding: 6px 10px; border-radius: 8px; border: 1px solid #d1fae5; }
+    @media print { .no-print{display:none} }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-white border-bottom no-print">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">Excessive Plastics — SDG12</a>
+    <div class="ms-auto d-none d-md-block">
+      <a class="btn btn-outline-primary me-2" href="index.html">Overview</a>
+      <a class="btn btn-outline-primary me-2" href="charts.html">Charts</a>
+      <a class="btn btn-outline-primary" href="details.html">Methodology</a>
+    </div>
+  </div>
+</nav>
+
+<main class="container my-4">
+  <div class="card card-compact p-3">
+    <div class="d-flex align-items-center justify-content-between mb-3 gap-2">
+      <div>
+        <h5 class="mb-0">All Responses (41)</h5>
+        <div id="storageStatus" style="margin-top:6px;"></div>
+      </div>
+
+      <div class="d-flex gap-2 align-items-center">
+        <input id="searchInput" class="form-control form-control-sm" placeholder="Search responses" style="width:240px">
+        <button id="downloadCSV" class="btn btn-sm btn-outline-secondary">Download CSV</button>
+        <button id="openLoader" class="btn btn-sm btn-primary">Load CSV / JSON</button>
+      </div>
+    </div>
+
+    <div class="table-responsive" style="max-height:60vh; overflow:auto">
+      <table class="table table-sm table-striped" id="responsesTable">
+        <thead><tr id="tableHead"><th>No data loaded</th></tr></thead>
+        <tbody id="tableBody"><tr><td class="no-data">No data loaded — click "Load CSV / JSON" and paste your Google Forms CSV (header + rows).</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="mt-3 d-flex gap-2">
+      <button id="sampleBtn" class="btn btn-outline-secondary">Load sample data</button>
+      <button id="clearBtn" class="btn btn-outline-danger">Clear data</button>
+      <div class="ms-auto text-muted small">Tip: Export Google Form → Responses → ⋮ → Download responses (.csv)</div>
+    </div>
+  </div>
+
+  <footer class="text-muted small mt-3">Prepared for: Community Connect — Final Evaluation</footer>
+</main>
+
+<!-- Loader modal -->
+<div id="modal" style="display:none; position:fixed; inset:0; z-index:1080; background:rgba(0,0,0,0.45); align-items:center; justify-content:center;">
+  <div style="background:white; width:92%; max-width:1000px; padding:1rem; border-radius:8px; max-height:86vh; overflow:auto;">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <strong>Load survey data (CSV export from Google Forms or JSON)</strong>
+      <button id="closeModal" class="btn btn-sm btn-outline-secondary">Close</button>
+    </div>
+    <p class="small text-muted">Paste the CSV text (including header row) or a JSON array of objects. The loader tries to handle quoted commas and quoted values.</p>
+    <textarea id="dataInput" style="width:100%; height:52vh; font-family:monospace; padding:8px;"></textarea>
+    <div class="mt-2 text-end">
+      <button id="loadDataBtn" class="btn btn-primary">Load & Render</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Utilities & state ---------- */
+let surveyData = [];        // array of objects
+let columns = [];           // header order
+const STORAGE_KEY = 'surveyCSV'; // localStorage key
+
+function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ---------- CSV parser (handles quoted commas) ---------- */
+function parseCSV(text){
+  // remove BOM, normalize newlines
+  text = text.replace(/^\uFEFF/, '').replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  const lines = text.split('\n').filter(l=>l.trim() !== '');
+  if(lines.length < 1) return [];
+  // handle header
+  const headerLine = lines[0];
+  const headers = splitCSVLine(headerLine);
+  const rows = [];
+  for(let i=1;i<lines.length;i++){
+    const line = lines[i];
+    const values = splitCSVLine(line);
+    const obj = {};
+    headers.forEach((h,idx) => obj[h] = (values[idx] !== undefined) ? values[idx] : '');
+    rows.push(obj);
+  }
+  return rows;
+}
+
+function splitCSVLine(line){
+  const vals = [];
+  let cur = '';
+  let inQuotes = false;
+  for(let i=0;i<line.length;i++){
+    const ch = line[i];
+    if(ch === '"' ){
+      // if next char is also quote -> escaped quote
+      if(inQuotes && line[i+1] === '"'){ cur += '"'; i++; continue; }
+      inQuotes = !inQuotes; continue;
+    }
+    if(ch === ',' && !inQuotes){ vals.push(cur); cur = ''; continue; }
+    cur += ch;
+  }
+  vals.push(cur);
+  // trim surrounding spaces & quotes
+  return vals.map(v => v.trim().replace(/^"(.*)"$/, '$1'));
+}
+
+/* ---------- Render table ---------- */
+function renderTable(){
+  const head = document.getElementById('tableHead');
+  const body = document.getElementById('tableBody');
+  head.innerHTML = '';
+  body.innerHTML = '';
+  if(!columns.length){
+    head.innerHTML = '<th>No data loaded</th>';
+    body.innerHTML = '<tr><td class="no-data">No data loaded — click "Load CSV / JSON" and paste your Google Forms CSV.</td></tr>';
+    updateStorageBadge();
+    return;
+  }
+  // build head
+  head.innerHTML = '<th>#</th>' + columns.map(c => `<th>${escapeHtml(c)}</th>`).join('');
+  // build rows
+  surveyData.forEach((r, idx) => {
+    let tr = `<tr><td>${idx+1}</td>`;
+    columns.forEach(c => { tr += `<td>${escapeHtml(r[c] || '')}</td>`; });
+    tr += '</tr>';
+    body.insertAdjacentHTML('beforeend', tr);
+  });
+  updateStorageBadge();
+}
+
+/* ---------- localStorage helpers ---------- */
+function saveToLocalStorage(rawText){
+  try{
+    localStorage.setItem(STORAGE_KEY, rawText);
+    updateStorageBadge();
+  }catch(e){
+    console.warn('Failed to save to localStorage', e);
+  }
+}
+function clearLocalStorage(){
+  try{
+    localStorage.removeItem(STORAGE_KEY);
+    updateStorageBadge();
+  }catch(e){ console.warn(e); }
+}
+
+/* ---------- Update small UI status that shows whether data loaded from storage ---------- */
+function updateStorageBadge(){
+  const el = document.getElementById('storageStatus');
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){
+    // show a small badge with timestamp
+    el.innerHTML = `<span class="storage-badge">Data loaded from local storage (saved)</span>`;
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+/* ---------- Load button behavior ---------- */
+document.getElementById('openLoader').addEventListener('click', ()=> {
+  document.getElementById('dataInput').value = '';
+  document.getElementById('modal').style.display = 'flex';
+});
+document.getElementById('closeModal').addEventListener('click', ()=> document.getElementById('modal').style.display = 'none');
+
+document.getElementById('loadDataBtn').addEventListener('click', ()=>{
+  const raw = document.getElementById('dataInput').value.trim();
+  if(!raw){ alert('Paste the CSV or JSON data into the box first.'); return; }
+  try {
+    let parsed = [];
+    if(raw.startsWith('[') || raw.startsWith('{')) {
+      // JSON parse
+      parsed = JSON.parse(raw);
+      if(!Array.isArray(parsed)) parsed = [parsed];
+    } else {
+      parsed = parseCSV(raw);
+    }
+    if(parsed.length === 0){ alert('Parsed data is empty. Check the CSV/JSON format.'); return; }
+    surveyData = parsed;
+    columns = Object.keys(surveyData[0]);
+    renderTable();
+    document.getElementById('modal').style.display = 'none';
+    // Save raw CSV/JSON string to localStorage for future auto-loading
+    saveToLocalStorage(raw);
+    // scroll to table
+    window.location.hash = '#responsesTable';
+  } catch(e){
+    alert('Failed to parse data: ' + e.message);
+    console.error(e);
+  }
+});
+
+/* ---------- sample / clear / download ---------- */
+document.getElementById('sampleBtn').addEventListener('click', ()=>{
+  const sample = `Timestamp,Name,Are you aware of alternatives to single-use plastic?,How often do you use single-use plastic bags?,Would you be willing to switch to reusable bags?
+2025-11-01 10:05,Anita,Yes,Often,Yes
+2025-11-02 11:12,Raj,No,Always,No
+2025-11-03 09:40,Meera,Yes,Sometimes,Yes
+2025-11-04 12:02,Amit,No,Often,No
+2025-11-05 14:20,Rina,Yes,Rarely,Yes`;
+  document.getElementById('dataInput').value = sample;
+  document.getElementById('loadDataBtn').click();
+});
+
+document.getElementById('clearBtn').addEventListener('click', ()=> {
+  if(!confirm('Clear loaded data from this page and remove saved copy?')) return;
+  surveyData = []; columns = [];
+  renderTable();
+  // remove from localStorage too
+  clearLocalStorage();
+});
+
+/* ---------- download current CSV ---------- */
+document.getElementById('downloadCSV').addEventListener('click', ()=>{
+  if(!surveyData.length){ alert('No data loaded to download.'); return; }
+  const hdr = columns;
+  const rows = surveyData.map(r => hdr.map(h => `"${String(r[h]||'').replace(/"/g,'""')}"`).join(','));
+  const csv = [hdr.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'survey_responses.csv'; document.body.appendChild(a); a.click(); a.remove();
+});
+
+/* ---------- search filter ---------- */
+document.getElementById('searchInput').addEventListener('input', (e)=>{
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('#tableBody tr').forEach(tr => {
+    tr.style.display = q === '' ? '' : (tr.textContent.toLowerCase().includes(q) ? '' : 'none');
+  });
+});
+
+/* ---------- Auto-load from localStorage on page load ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  updateStorageBadge();
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){
+    try{
+      let parsed = [];
+      if(saved.trim().startsWith('[') || saved.trim().startsWith('{')){
+        parsed = JSON.parse(saved);
+        if(!Array.isArray(parsed)) parsed = [parsed];
+      } else {
+        parsed = parseCSV(saved);
+      }
+      if(parsed && parsed.length){
+        surveyData = parsed;
+        columns = Object.keys(surveyData[0]);
+        renderTable();
+      }
+    }catch(e){
+      console.warn('Failed to auto-parse stored CSV:', e);
+      // if stored data is corrupt, clear it to avoid repeated errors
+      // (optional) remove this next line if you prefer manual handling
+      // localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+});
+
+/* ---------- initial render (empty) ---------- */
+renderTable();
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
